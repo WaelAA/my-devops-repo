@@ -1,0 +1,38 @@
+---
+- name: Manage Kubernetes Configuration
+  hosts: local
+  connection: local
+  tasks:
+    - name: Create a Kubernetes Namespace
+      kubernetes.core.k8s:
+        name: ansible-space
+        api_version: v1
+        kind: Namespace
+        state: present
+
+    - name: Create a ConfigMap for App Settings
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            name: app-settings
+            namespace: ansible-space
+          data:
+            APP_COLOR: "blue"
+            WELCOME_MSG: "Hello from Ansible!"
+
+    - name: Create a Secret for DB Credentials
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: db-secret
+            namespace: ansible-space
+          type: Opaque
+          data:
+            # Passwords must be base64 encoded in K8s Secrets
+            password: "{{ 'MySuperSecretPass' | b64encode }}"
