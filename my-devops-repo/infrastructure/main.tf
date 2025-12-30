@@ -29,7 +29,7 @@ resource "kubernetes_deployment_v1" "nginx" {
   }
 
   spec {
-    replicas = 2 # This ensures 2 copies are always running
+    replicas = 8 # This ensures 2 copies are always running
 
     selector {
       match_labels = {
