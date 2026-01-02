@@ -4,7 +4,7 @@ metadata:
   name: nginx-server
   namespace: devops-lab
 spec:
-  replicas: 3
+  replicas: 5
   selector:
     matchLabels:
       app: nginx
@@ -21,9 +21,9 @@ spec:
         # Check this section carefully:
         volumeMounts:
         - name: config-volume
-          mount_path: /usr/share/nginx/html/index.html # Must be 'mountPath' (case sensitive)
-          sub_path: WELCOME_MSG
+          mountPath: /usr/share/nginx/html/index.html # Must be 'mountPath' (case sensitive)
+          subPath: WELCOME_MSG
       volumes:
       - name: config-volume
-        config_map:
+        configMap:
           name: app-settings
