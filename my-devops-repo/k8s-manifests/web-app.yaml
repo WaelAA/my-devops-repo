@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx-server
-  namespace: devops-lab # Must match Ansible and Terraform
+  namespace: devops-lab
 spec:
   replicas: 3
   selector:
@@ -18,11 +18,12 @@ spec:
         image: nginx:1.21.6
         ports:
         - containerPort: 80
+        # Check this section carefully:
         volumeMounts:
         - name: config-volume
-          mount_path: /usr/share/nginx/html/index.html
-          sub_path: WELCOME_MSG
+          mountPath: /usr/share/nginx/html/index.html # Must be 'mountPath' (case sensitive)
+          subPath: WELCOME_MSG
       volumes:
       - name: config-volume
-        config_map:
-          name: app-settings # ArgoCD finds this in the same namespace
+        configMap:
+          name: app-settings
