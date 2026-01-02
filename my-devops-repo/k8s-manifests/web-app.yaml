@@ -1,8 +1,9 @@
+# 1. THE DEPLOYMENT: Defines how many pods to run and their config
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx-server
-  namespace: devops-lab
+  namespace: devops-lab # Must match Ansible and Terraform
 spec:
   replicas: 5
   selector:
@@ -27,3 +28,41 @@ spec:
       - name: config-volume
         configMap:
           name: app-settings
+---
+# 2. THE SERVICE: The internal "stable" IP for your pods
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  namespace: devops-lab
+spec:
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      target_port: 80
+  type: ClusterIP # Changed from NodePort because Ingress handles external access now
+---
+# 3. THE INGRESS: The "Front Door" for http://devops.lab
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web-app-ingress
+  namespace: devops-lab
+  annotations:
+    # This tells the Nginx controller how to handle traffic
+    kubernetes.io/ingress.class: public
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: devops.lab  # This is your "local" domain
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-service
+            port:
+              number: 80
