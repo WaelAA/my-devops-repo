@@ -5,7 +5,7 @@ metadata:
   name: nginx-server
   namespace: devops-lab # Must match Ansible and Terraform
 spec:
-  replicas: 5
+  replicas: 3
   selector:
     matchLabels:
       app: nginx
