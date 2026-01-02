@@ -54,6 +54,11 @@ metadata:
     # This tells the Nginx controller how to handle traffic
     kubernetes.io/ingress.class: public
     nginx.ingress.kubernetes.io/rewrite-target: /
+    # --- STICKY SESSION CONFIGURATION ---
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/session-cookie-name: "route"
+    nginx.ingress.kubernetes.io/session-cookie-expires: "172800"
+    nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
 spec:
   rules:
   - host: devops.lab  # This is your "local" domain
