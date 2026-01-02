@@ -41,7 +41,7 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      target_port: 80
+      targetPort: 80
   type: ClusterIP # Changed from NodePort because Ingress handles external access now
 ---
 # 3. THE INGRESS: The "Front Door" for http://devops.lab
